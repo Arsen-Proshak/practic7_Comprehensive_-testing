@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="uk" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Навчальний веб-додаток: моделювання станів екрана, дизайн-токени, QA-тестування та аудит доступності." />
+  <title>Практична робота №7 — Тестування та аудит якості веб-додатку</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
+  <link rel="stylesheet" href="tokens.css" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="app.js" defer></script>
+  <script src="tests.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <!-- Шапка із перемикачем теми -->
+    <header class="app-header">
+      <div>
+        <h1 class="app-title">Каталог навчальних модулів</h1>
+        <p class="card-desc">Моделювання станів екрана, дизайн-система та QA-аудит</p>
+      </div>
+      <button type="button" id="themeToggleBtn" class="btn btn-secondary">
+        Перемкнути тему (Dark / Light)
+      </button>
+    </header>
+
+    <!-- Панель керування станами та пошуку -->
+    <section class="control-panel" aria-label="Панель керування станами">
+      <div class="state-switcher">
+        <button type="button" class="btn btn-secondary" data-switch-state="content">Дані</button>
+        <button type="button" class="btn btn-secondary" data-switch-state="loading">Завантаження</button>
+        <button type="button" class="btn btn-secondary" data-switch-state="empty">Порожній</button>
+        <button type="button" class="btn btn-secondary" data-switch-state="error">Помилка</button>
+      </div>
+
+      <div class="toolbar">
+        <div class="form-group">
+          <label for="searchInput" class="form-label">Пошук модуля</label>
+          <input type="text" id="searchInput" class="form-input" placeholder="Наприклад: JavaScript..." />
+        </div>
+        <button type="button" id="refreshBtn" class="btn btn-primary">Оновити дані</button>
+      </div>
+    </section>
+
+    <!-- Форма додавання нової картки (для перевірки валідації, 250+ символів та XSS) -->
+    <section class="control-panel" aria-label="Додавання нового модуля">
+      <form id="addModuleForm" class="add-form" novalidate>
+        <div class="form-group">
+          <label for="moduleTagInput" class="form-label">Категорія</label>
+          <input type="text" id="moduleTagInput" class="form-input" placeholder="Наприклад: QA / Testing" />
+        </div>
+
+        <div class="form-group">
+          <label for="moduleTitleInput" class="form-label">Назва модуля</label>
+          <input type="text" id="moduleTitleInput" class="form-input" placeholder="Введіть назву..." />
+        </div>
+
+        <div class="form-group add-form__desc">
+          <label for="moduleDescInput" class="form-label">Опис модуля (перевірка довжини та XSS)</label>
+          <input type="text" id="moduleDescInput" class="form-input" placeholder="Короткий опис або тестовий рядок..." />
+          <span id="formFeedback" class="form-error-text is-hidden" role="alert"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Додати картку</button>
+      </form>
+    </section>
+
+    <!-- Робоча область із 4 взаємовиключними станами -->
+    <main id="appMain">
+      <!-- 1. СТАН ЗАВАНТАЖЕННЯ -->
+      <div data-state="loading" class="cards-grid is-hidden" aria-busy="true">
+        <article class="card">
+          <div class="skeleton-box skeleton-badge"></div>
+          <div class="skeleton-box skeleton-title"></div>
+          <div class="skeleton-box skeleton-text"></div>
+        </article>
+        <article class="card">
+          <div class="skeleton-box skeleton-badge"></div>
+          <div class="skeleton-box skeleton-title"></div>
+          <div class="skeleton-box skeleton-text"></div>
+        </article>
+        <article class="card">
+          <div class="skeleton-box skeleton-badge"></div>
+          <div class="skeleton-box skeleton-title"></div>
+          <div class="skeleton-box skeleton-text"></div>
+        </article>
+      </div>
+
+      <!-- 2. СТАН ІЗ ДАНИМИ -->
+      <div data-state="content" id="contentContainer" class="cards-grid"></div>
+
+      <!-- 3. ПОРОЖНІЙ СТАН -->
+      <div data-state="empty" class="state-placeholder is-hidden">
+        <svg class="state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <h2>Елементів не знайдено</h2>
+        <p class="card-desc">За запитом «<span id="emptyQueryText"></span>» результатів немає або список порожній.</p>
+        <button type="button" id="resetEmptyBtn" class="btn btn-primary">Скинути фільтри та відновити список</button>
+      </div>
+
+      <!-- 4. СТАН ПОМИЛКИ -->
+      <div data-state="error" class="state-placeholder state-placeholder--error is-hidden" role="alert">
+        <svg class="state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <h2>Помилка завантаження даних (HTTP 503)</h2>
+        <p class="card-desc">Не вдалося отримати відповідь від сервера. Перевірте з'єднання та спробуйте ще раз.</p>
+        <button type="button" id="retryErrorBtn" class="btn btn-danger">Повторити спробу</button>
+      </div>
+    </main>
+
+    <!-- UI-Kit Showcase -->
+    <section class="uikit-section" aria-labelledby="uikitHeading">
+      <div>
+        <h2 id="uikitHeading">UI-Kit / Дизайн-система</h2>
+        <p class="card-desc">Демонстрація стандартизованих компонентів на основі трирівневих CSS-токенів.</p>
+      </div>
+
+      <div>
+        <h3>1. Варіанти кнопок (Default & Disabled)</h3>
+        <div class="uikit-row">
+          <button type="button" class="btn btn-primary">Primary</button>
+          <button type="button" class="btn btn-secondary">Secondary</button>
+          <button type="button" class="btn btn-danger">Danger</button>
+          <button type="button" class="btn btn-primary" disabled>Disabled</button>
+        </div>
+      </div>
+
+      <div>
+        <h3>2. Текстові поля та стани валідації</h3>
+        <div class="uikit-row">
+          <div class="form-group">
+            <label for="demoNormalInput" class="form-label">Звичайне поле (Default)</label>
+            <input type="text" id="demoNormalInput" class="form-input" placeholder="Введіть текст..." />
+          </div>
+
+          <div class="form-group">
+            <label for="demoErrorInput" class="form-label">Поле з помилкою (Error)</label>
+            <input type="text" id="demoErrorInput" class="form-input is-error" value="Некоректний email" />
+            <span class="form-error-text">Введіть коректну електронну адресу</span>
+          </div>
+
+          <div class="form-group">
+            <label for="demoDisabledInput" class="form-label">Заблоковане поле (Disabled)</label>
+            <input type="text" id="demoDisabledInput" class="form-input" value="Тільки читання" disabled />
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h3>3. Уніфікована картка контенту</h3>
+        <div class="cards-grid">
+          <article class="card">
+            <span class="card-badge">UI Component</span>
+            <h4 class="card-title">Стандартна картка</h4>
+            <p class="card-desc">Використовує виключно компонентні токени --card-bg, --card-border та --card-radius.</p>
+            <button type="button" class="btn btn-secondary">Дія картки</button>
+          </article>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

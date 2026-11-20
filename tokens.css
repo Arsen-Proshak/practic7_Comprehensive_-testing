@@ -1,0 +1,139 @@
+:root {
+  /* =========================================================
+     РІВЕНЬ 1: PRIMITIVE TOKENS (Сирі значення)
+     ========================================================= */
+  --palette-blue-500: #3b82f6;
+  --palette-blue-600: #2563eb;
+  --palette-blue-700: #1d4ed8;
+
+  --palette-red-500: #ef4444;
+  --palette-red-600: #dc2626;
+  --palette-red-700: #b91c1c;
+  --palette-red-100: #fee2e2;
+
+  --palette-green-600: #16a34a;
+  --palette-green-100: #dcfce7;
+
+  --palette-neutral-0: #ffffff;
+  --palette-neutral-50: #f8fafc;
+  --palette-neutral-100: #f1f5f9;
+  --palette-neutral-200: #e2e8f0;
+  --palette-neutral-300: #cbd5e1;
+  --palette-neutral-500: #64748b;
+  --palette-neutral-700: #334155;
+  --palette-neutral-800: #1e293b;
+  --palette-neutral-900: #0f172a;
+
+  /* Шкала відступів */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  /* Типографіка */
+  --font-family-base: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 1.5rem;
+  --line-height-base: 1.5;
+
+  /* Радіуси та тіні */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.08);
+  --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.1);
+
+  /* =========================================================
+     РІВЕНЬ 2: SEMANTIC TOKENS (Світла тема за замовчуванням)
+     ========================================================= */
+  --bg-page: var(--palette-neutral-50);
+  --bg-surface: var(--palette-neutral-0);
+  --bg-surface-subtle: var(--palette-neutral-100);
+
+  --text-primary: var(--palette-neutral-900);
+  --text-secondary: var(--palette-neutral-500);
+  --text-inverse: var(--palette-neutral-0);
+
+  --border-default: var(--palette-neutral-200);
+  --border-strong: var(--palette-neutral-300);
+
+  --color-primary: var(--palette-blue-600);
+  --color-primary-hover: var(--palette-blue-700);
+  --color-focus-ring: var(--palette-blue-500);
+
+  --color-danger: var(--palette-red-600);
+  --color-danger-hover: var(--palette-red-700);
+  --color-danger-bg: var(--palette-red-100);
+
+  --color-success: var(--palette-green-600);
+  --color-success-bg: var(--palette-green-100);
+
+  --skeleton-base: var(--palette-neutral-200);
+  --skeleton-highlight: var(--palette-neutral-100);
+
+  /* =========================================================
+     РІВЕНЬ 3: COMPONENT TOKENS (Токени конкретних елементів)
+     ========================================================= */
+  /* Кнопки */
+  --btn-padding-y: var(--space-2);
+  --btn-padding-x: var(--space-4);
+  --btn-radius: var(--radius-sm);
+  --btn-font-size: var(--font-size-sm);
+
+  --btn-primary-bg: var(--color-primary);
+  --btn-primary-bg-hover: var(--color-primary-hover);
+  --btn-primary-text: var(--text-inverse);
+
+  --btn-secondary-bg: var(--bg-surface-subtle);
+  --btn-secondary-bg-hover: var(--border-default);
+  --btn-secondary-text: var(--text-primary);
+
+  --btn-danger-bg: var(--color-danger);
+  --btn-danger-bg-hover: var(--color-danger-hover);
+  --btn-danger-text: var(--text-inverse);
+
+  /* Поля вводу */
+  --input-bg: var(--bg-surface);
+  --input-border: var(--border-strong);
+  --input-text: var(--text-primary);
+  --input-radius: var(--radius-sm);
+  --input-padding: var(--space-2) var(--space-3);
+
+  /* Картки */
+  --card-bg: var(--bg-surface);
+  --card-border: var(--border-default);
+  --card-radius: var(--radius-md);
+  --card-padding: var(--space-4);
+  --card-shadow: var(--shadow-sm);
+}
+
+/* =========================================================
+   ПЕРЕВИЗНАЧЕННЯ СЕМАНТИЧНИХ ТОКЕНІВ ДЛЯ ТЕМНОЇ ТЕМИ
+   ========================================================= */
+[data-theme="dark"] {
+  --bg-page: var(--palette-neutral-900);
+  --bg-surface: var(--palette-neutral-800);
+  --bg-surface-subtle: var(--palette-neutral-700);
+
+  --text-primary: var(--palette-neutral-50);
+  --text-secondary: var(--palette-neutral-300);
+
+  --border-default: var(--palette-neutral-700);
+  --border-strong: var(--palette-neutral-500);
+
+  --color-primary: var(--palette-blue-500);
+  --color-primary-hover: var(--palette-blue-600);
+
+  --color-danger: var(--palette-red-500);
+  --color-danger-hover: var(--palette-red-600);
+  --color-danger-bg: rgba(239, 68, 68, 0.15);
+
+  --color-success-bg: rgba(22, 163, 74, 0.2);
+
+  --skeleton-base: var(--palette-neutral-700);
+  --skeleton-highlight: var(--palette-neutral-800);
+}
